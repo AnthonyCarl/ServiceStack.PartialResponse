@@ -4,7 +4,7 @@ ServiceStack.PartialResponse.ServiceModel
 [Google Style Partial Responses](https://developers.google.com/+/api/#partial-responses) for [ServiceStack.Net](https://github.com/ServiceStack/ServiceStack). Currently only the following Content types are supported:
 - `application/json`
 - `application/jsv`
-- `application/html`
+- `text/html`
 
 `application/xml` is NOT currently supported.
 
