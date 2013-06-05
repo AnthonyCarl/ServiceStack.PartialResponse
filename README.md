@@ -1,7 +1,12 @@
 ServiceStack.PartialResponse.ServiceModel
 =========================================
 
-[Google Style Partial Responses](https://developers.google.com/+/api/#partial-responses) for [ServiceStack.Net](https://github.com/ServiceStack/ServiceStack). 
+[Google Style Partial Responses](https://developers.google.com/+/api/#partial-responses) for [ServiceStack.Net](https://github.com/ServiceStack/ServiceStack). Currently only the following Content types are supported:
+- `application/json`
+- `application/jsv`
+- `application/html`
+
+`application/xml` is NOT currently supported.
 
 ##Providing Field Selectors
 Field Selectors can be passed using the header or query string. By default field selectors are combined form both. Duplicate field selectors are reduced. The field selector is applied to all entries in a list if the selector referes to a list. 
