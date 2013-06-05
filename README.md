@@ -3,7 +3,7 @@ ServiceStack.PartialResponse.ServiceModel
 
 Google Style Partial Responses for [ServiceStack.Net](https://github.com/ServiceStack/ServiceStack)
 
-```
+```c#
 public object Get(MyRequestDto request)
 {
   MyResponseDto response = SomeMethodThatGenerateTheResponse(request);
@@ -11,7 +11,7 @@ public object Get(MyRequestDto request)
 }
 ```
 --or, if you want it compressed--
-```
+```C#
 public object Get(MyRequestDto request)
 {
   MyResponseDto response = SomeMethodThatGenerateTheResponse(request);
