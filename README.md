@@ -8,6 +8,8 @@ ServiceStack.PartialResponse.ServiceModel
 
 `application/xml` is NOT currently supported.
 
+I wanted to implement this as a ServiceStack `IPlugin`, but I was unable to figure out how to get the access I needed to the response DTO for my approach. Currently, this is implemented as an `IRequestContext` extension.
+
 ##Providing Field Selectors
 Field Selectors can be passed using the header or query string. By default field selectors are combined form both. Duplicate field selectors are reduced. The field selector is applied to all entries in a list if the selector referes to a list. 
 
