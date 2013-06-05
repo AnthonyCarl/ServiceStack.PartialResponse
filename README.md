@@ -11,6 +11,8 @@ Field Selectors can be passed using the header or query string. By default field
 | `Query String` | `fields=id&fields=todt` or `fields=id,todt` |
 | `Header` | `x-fields: id,todt` |
 
+If field selectors are passed in the query string, make sure it is properly encoded.
+
 ##Field Selector Reserved Characters
 | Character | Meaning |
 |:--:|:--|
@@ -21,17 +23,19 @@ Field Selectors can be passed using the header or query string. By default field
 
 Currently `*` is not supported.
 
-##Field Selector Example
+##Field Selector Examples
 
-`person(name(first,last),address(zip,street)),person/salary,link(url,description/short)`
+**Example:** `person(name(first,last),address(zip,street)),person/salary,link(url,description/short)`
 
-This will select the person's first and last name, their salary, and the zip and street portions of their address. It will also select the url and short description of the link.
+**Explanation:** This will select the person's first and last name, their salary, and the zip and street portions of their address. It will also select the url and short description of the link.
 
-`people/name/first` 
+---
 
-`people` refers to a list. This will select the first name of all people in the list.
+**Example:** `people/name/first`
 
-##Code Example
+**Explanation:** `people` refers to a list. This will select the first name of all people in the list.
+
+##Code Examples
 
 ```c#
 public object Get(MyRequestDto request)
