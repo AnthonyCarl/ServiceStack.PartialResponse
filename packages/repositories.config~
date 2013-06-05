@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<repositories>
-  <repository path="..\ServiceStack.Plugins.PartialResponse.UnitTests\packages.config" />
-  <repository path="..\ServiceStack.Plugins.PartialResponse\packages.config" />
-</repositories>
