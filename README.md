@@ -55,6 +55,22 @@ public object Get(MyRequestDto request)
 }
 ```
 
+##Basic Benchmark
+
+The Dto used contains 32 properties. The response is a list of 250 of these DTOs. The partial response only selects the ID.
+
+```
+===================================
+Completed 1000 Test Interations
+===================================
+
+===================================
+Partial Response min/max/avg 12ms/323ms/15.208ms
+===================================
+Full Response min/max/avg 18ms/383ms/25.624ms
+===================================
+```
+
 ##ToDo
 
 - Publish NuGet Package
