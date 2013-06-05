@@ -23,6 +23,8 @@ If field selectors are passed in the query string, make sure it is properly enco
 
 Currently `*` is not supported.
 
+**Note:** All field selector reserved characters may be nested.
+
 ##Field Selector Examples
 
 **Example:** `person(name(first,last),address(zip,street)),person/salary,link(url,description/short)`
