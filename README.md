@@ -8,7 +8,7 @@ Field Selectors can be passed using the header or query string. By default field
 
 | Method | Example |
 |:--:|:--|
-| `Query String` | `/mydtoroute?fields=id&fields=todt` or `/mydtoroute?fields=id,todt` |
+| `Query String` | `http://myhost/mydtoroute?fields=id&fields=todt` or `http://myhost/mydtoroute?fields=id,todt` |
 | `Header` | `x-fields: id,todt` |
 
 If field selectors are passed in the query string, make sure it is properly encoded.
