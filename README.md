@@ -57,7 +57,7 @@ public object Get(MyRequestDto request)
 
 ##Basic Benchmark
 
-The Dto used contains 32 properties. The response is a list of 250 of these DTOs. The partial response only selects the ID.
+The DTO used contains 32 properties. The response is a list of 250 of these DTOs. The partial response only selects the ID.
 
 ```
 ===================================
