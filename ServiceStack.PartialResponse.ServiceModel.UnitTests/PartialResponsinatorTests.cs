@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace ServiceStack.Plugins.PartialResponse.UnitTests
 {
-    [TestClass]
     public class PartialResponsinatorTests
     {
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_FlatObject_ResultContainsOnlySelectedFields()
         {
             const string JaneDoeHomepageUri = "http://janedoe.com/";
@@ -40,14 +39,14 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             var responsinator = new PartialResponsinator(partialFieldSelectors);
             dynamic responsible = responsinator.GetPartialResponse(fakeDto);
 
-            Assert.AreEqual(DeeDoeFirstName, responsible.Name.First);
-            Assert.AreEqual(DeeDoeLastName, responsible.Name.Last);
-            Assert.AreEqual(JaneDoeHomepageUri, responsible.HomePage.Uri);
+            Assert.Equal(DeeDoeFirstName, responsible.Name.First);
+            Assert.Equal(DeeDoeLastName, responsible.Name.Last);
+            Assert.Equal(JaneDoeHomepageUri, responsible.HomePage.Uri);
             var homePage = responsible.HomePage as IDictionary<string, object>;
-            Assert.IsFalse(homePage.ContainsKey("Rel"));
+            Assert.False(homePage.ContainsKey("Rel"));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_ComplexObjectWithNestedLists_ResultContainsOnlySelectedFields()
         {
             //I don't particularly like this test. I am open to ideas for improvement.
@@ -101,22 +100,22 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             var responsinator = new PartialResponsinator(partialFieldSelectors);
             dynamic partialResponse = responsinator.GetPartialResponse(fakDto);
 
-            Assert.AreEqual(JaneDoeSalary, partialResponse.Salary);
+            Assert.Equal(JaneDoeSalary, partialResponse.Salary);
 
-            Assert.AreEqual(1, partialResponse.Person.ChildrenNames.Count);
-            Assert.AreEqual(DeeDoeFirstName, partialResponse.Person.ChildrenNames[0].First);
-            Assert.AreEqual(DeeDoeLastName, partialResponse.Person.ChildrenNames[0].Last);
+            Assert.Equal(1, partialResponse.Person.ChildrenNames.Count);
+            Assert.Equal(DeeDoeFirstName, partialResponse.Person.ChildrenNames[0].First);
+            Assert.Equal(DeeDoeLastName, partialResponse.Person.ChildrenNames[0].Last);
 
             var firstLink = partialResponse.Links[0] as IDictionary<string, object>;
-            Assert.AreEqual(1, partialResponse.Links.Count);
-            Assert.AreEqual(JaneDoeHomepageUri, firstLink["Uri"]);
-            Assert.IsFalse(firstLink.ContainsKey("Rel"), "Rel should not be present on link.");
+            Assert.Equal(1, partialResponse.Links.Count);
+            Assert.Equal(JaneDoeHomepageUri, firstLink["Uri"]);
+            Assert.False(firstLink.ContainsKey("Rel"), "Rel should not be present on link.");
 
             var person = partialResponse.Person as IDictionary<string, object>;
-            Assert.IsFalse(person.ContainsKey("Name"), "Name should not be present on Person");
+            Assert.False(person.ContainsKey("Name"), "Name should not be present on Person");
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_RootIsListOfNames_ResultContainsOnlyFirstNames()
         {
             const string Person0FirstName = "Thor";
@@ -135,36 +134,36 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             var partialResponsinator = new PartialResponsinator(partialFieldSelectors);
             dynamic partialResp = partialResponsinator.GetPartialResponse(myDto);
 
-            Assert.AreEqual(2, partialResp.Count);
-            Assert.AreEqual(Person0FirstName, partialResp[0].First);
-            Assert.AreEqual(Person1FirstName, partialResp[1].First);
+            Assert.Equal(2, partialResp.Count);
+            Assert.Equal(Person0FirstName, partialResp[0].First);
+            Assert.Equal(Person1FirstName, partialResp[1].First);
         }
 
-        [TestMethod]
-        public void GetPartialResponse_NullResponseOneEntryFieldSelectorList_ResultIsNull()
+        [Fact]
+        public void GetPartialResponse_NullResponseOneEntryFieldSelectorList_ResultNull()
         {
             var responsinator =
                 new PartialResponsinator(new List<FieldSelectorTreeNode> {new FieldSelectorTreeNode("Member")});
-            Assert.IsNull(responsinator.GetPartialResponse(null));
+            Assert.Null(responsinator.GetPartialResponse(null));
         }
 
-        [TestMethod]
-        public void GetPartialResponse_NullFieldSelectorListResponseHasValue_ResultIsNull()
+        [Fact]
+        public void GetPartialResponse_NullFieldSelectorListResponseHasValue_ResultNull()
         {
             var responsinator = new PartialResponsinator(null);
             DateTimeOffset response = DateTimeOffset.UtcNow;
-            Assert.AreEqual(response, responsinator.GetPartialResponse(response));
+            Assert.Equal(response, responsinator.GetPartialResponse(response));
         }
 
-        [TestMethod]
-        public void GetPartialResponse_EmptyFieldSelectorListResponseHasValue_ResultIsNull()
+        [Fact]
+        public void GetPartialResponse_EmptyFieldSelectorListResponseHasValue_ResultNull()
         {
             var responsinator = new PartialResponsinator(new List<FieldSelectorTreeNode>());
             DateTimeOffset response = DateTimeOffset.UtcNow;
-            Assert.AreEqual(response, responsinator.GetPartialResponse(response));
+            Assert.Equal(response, responsinator.GetPartialResponse(response));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_ListOfNulls_ReturnsEmptyList()
         {
             var myDto = new List<FakeName> {null, null, null};
@@ -176,10 +175,10 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             var partialResponsinator = new PartialResponsinator(partialFieldSelectors);
             dynamic partialResp = partialResponsinator.GetPartialResponse(myDto);
 
-            Assert.AreEqual(0, partialResp.Count);
+            Assert.Equal(0, partialResp.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_ListOfMixedWithNulls_ReturnsListWithoutNull()
         {
             const string Person0FirstName = "Thor";
@@ -198,12 +197,12 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
 
             var partialResponsinator = new PartialResponsinator(partialFieldSelectors);
             dynamic partialResp = partialResponsinator.GetPartialResponse(myDto);
-            Assert.AreEqual(2, partialResp.Count);
-            Assert.AreEqual(Person0FirstName, partialResp[0].First);
-            Assert.AreEqual(Person1FirstName, partialResp[1].First);
+            Assert.Equal(2, partialResp.Count);
+            Assert.Equal(Person0FirstName, partialResp[0].First);
+            Assert.Equal(Person1FirstName, partialResp[1].First);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_InvalidFieldSelectionOnList_ReturnsEmptyList()
         {
             const string Person0FirstName = "Thor";
@@ -222,10 +221,10 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             var partialResponsinator = new PartialResponsinator(partialFieldSelectors);
             dynamic partialResp = partialResponsinator.GetPartialResponse(myDto);
 
-            Assert.AreEqual(0, partialResp.Count);
+            Assert.Equal(0, partialResp.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_InvalidFieldSelectionOnFlatObj_ReturnsEmptyDynamic()
         {
             const string Person0FirstName = "Thor";
@@ -239,14 +238,14 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             var partialResponsinator = new PartialResponsinator(partialFieldSelectors);
             dynamic partialResp = partialResponsinator.GetPartialResponse(myDto);
 
-            Assert.IsNotNull(partialResp);
+            Assert.NotNull(partialResp);
 
             var asDict = partialResp as IDictionary<string, object>;
 
-            Assert.AreEqual(0, asDict.Count);
+            Assert.Equal(0, asDict.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPartialResponse_DtoHasNestedNulList_ReturnsEmptyDynamic()
         {
             var fakeDto = new FakeDto {Links = null};
@@ -260,7 +259,7 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
 
             var asDict = partialResp as IDictionary<string, object>;
 
-            Assert.AreEqual(0, asDict.Count);
+            Assert.Equal(0, asDict.Count);
         }
     }
 }

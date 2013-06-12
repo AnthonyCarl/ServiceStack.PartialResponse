@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ServiceStack.Common;
+using Xunit;
 
 namespace ServiceStack.Plugins.PartialResponse.UnitTests
 {
-    [TestClass]
     public class FieldSelectorParserTests
     {
-        [TestMethod]
+        [Fact]
         public void Expand_ComplexNestedFieldString_ReturnsParsedTree()
         {
             List<FieldSelectorTreeNode> tree =
@@ -17,48 +15,48 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
 
             FieldSelectorTreeNode personNode = tree.Find(item => item.MemberName == "person");
 
-            Assert.IsNotNull(personNode);
-            Assert.AreEqual(3, personNode.Children.Count);
-            Assert.IsNotNull(personNode.Children.Find(item => item.MemberName == "salary"));
+            Assert.NotNull(personNode);
+            Assert.Equal(3, personNode.Children.Count);
+            Assert.NotNull(personNode.Children.Find(item => item.MemberName == "salary"));
 
             FieldSelectorTreeNode nameNode = personNode.Children.Find(item => item.MemberName == "name");
 
-            Assert.IsNotNull(nameNode);
-            Assert.AreEqual(2, nameNode.Children.Count);
-            Assert.IsNotNull(nameNode.Children.Find(item => item.MemberName == "first"));
-            Assert.IsNotNull(nameNode.Children.Find(item => item.MemberName == "last"));
+            Assert.NotNull(nameNode);
+            Assert.Equal(2, nameNode.Children.Count);
+            Assert.NotNull(nameNode.Children.Find(item => item.MemberName == "first"));
+            Assert.NotNull(nameNode.Children.Find(item => item.MemberName == "last"));
 
             FieldSelectorTreeNode addressNode = personNode.Children.Find(item => item.MemberName == "address");
 
-            Assert.IsNotNull(addressNode);
-            Assert.AreEqual(2, addressNode.Children.Count);
-            Assert.IsNotNull(addressNode.Children.Find(item => item.MemberName == "zip"));
-            Assert.IsNotNull(addressNode.Children.Find(item => item.MemberName == "street"));
+            Assert.NotNull(addressNode);
+            Assert.Equal(2, addressNode.Children.Count);
+            Assert.NotNull(addressNode.Children.Find(item => item.MemberName == "zip"));
+            Assert.NotNull(addressNode.Children.Find(item => item.MemberName == "street"));
 
             FieldSelectorTreeNode linkNode = tree.Find(item => item.MemberName == "link");
 
-            Assert.IsNotNull(linkNode);
-            Assert.AreEqual(2, linkNode.Children.Count);
-            Assert.IsNotNull(linkNode.Children.Find(item => item.MemberName == "url"));
+            Assert.NotNull(linkNode);
+            Assert.Equal(2, linkNode.Children.Count);
+            Assert.NotNull(linkNode.Children.Find(item => item.MemberName == "url"));
 
             FieldSelectorTreeNode descriptionNode = linkNode.Children.Find(item => item.MemberName == "description");
 
-            Assert.IsNotNull(descriptionNode);
-            Assert.AreEqual(1, descriptionNode.Children.Count);
-            Assert.IsNotNull(descriptionNode.Children.Find(item => item.MemberName == "short"));
+            Assert.NotNull(descriptionNode);
+            Assert.Equal(1, descriptionNode.Children.Count);
+            Assert.NotNull(descriptionNode.Children.Find(item => item.MemberName == "short"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_SelectSingleField_OneFieldSelectorReturned()
         {
             const string MyField = "myField";
             List<FieldSelectorTreeNode> tree = FieldSelectorParser.Expand(MyField);
-            Assert.AreEqual(1, tree.Count, "There should only be one field selector.");
-            Assert.AreEqual(MyField, tree[0].MemberName);
-            Assert.IsTrue(tree[0].Children.IsEmpty());
+            Assert.Equal(1, tree.Count);
+            Assert.Equal(MyField, tree[0].MemberName);
+            Assert.True(tree[0].Children.IsEmpty());
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_SelectOneNestedField_TreeHasOneNestedSelector()
         {
             const string RootField = "contacttypes";
@@ -66,15 +64,15 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             string nestedFieldSelector = RootField + FieldSelectorConstants.NestedFieldSelector + SubField;
 
             List<FieldSelectorTreeNode> tree = FieldSelectorParser.Expand(nestedFieldSelector);
-            Assert.AreEqual(1, tree.Count, "There should only be one root field selector.");
-            Assert.AreEqual(RootField, tree[0].MemberName);
+            Assert.Equal(1, tree.Count);
+            Assert.Equal(RootField, tree[0].MemberName);
 
-            Assert.AreEqual(1, tree[0].Children.Count);
-            Assert.AreEqual(SubField, tree[0].Children[0].MemberName);
-            Assert.IsTrue(tree[0].Children[0].Children.IsEmpty());
+            Assert.Equal(1, tree[0].Children.Count);
+            Assert.Equal(SubField, tree[0].Children[0].MemberName);
+            Assert.True(tree[0].Children[0].Children.IsEmpty());
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_FieldSelectorBegineWithReservedToken_ThrowArgumentException()
         {
             bool exceptionCaught = false;
@@ -85,32 +83,32 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             catch (ArgumentException ex)
             {
                 exceptionCaught = true;
-                Assert.IsTrue(
+                Assert.True(
                     ex.Message.Contains("A reserved token can not be the first character of the fields selector."));
             }
 
-            Assert.IsTrue(exceptionCaught, "No Argument Exception caught!");
+            Assert.True(exceptionCaught, "No Argument Exception caught!");
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_EmptyFieldSelectorString_ReturnsEmptyList()
         {
-            Assert.AreEqual(0, FieldSelectorParser.Expand(string.Empty).Count);
+            Assert.Equal(0, FieldSelectorParser.Expand(string.Empty).Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_NullFieldSelectorString_ReturnsEmptyList()
         {
-            Assert.AreEqual(0, FieldSelectorParser.Expand(null).Count);
+            Assert.Equal(0, FieldSelectorParser.Expand(null).Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_WhitespaceFieldSelectorString_ReturnsEmptyList()
         {
-            Assert.AreEqual(0, FieldSelectorParser.Expand("  \t  \n  \r").Count);
+            Assert.Equal(0, FieldSelectorParser.Expand("  \t  \n  \r").Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_NestedTokenPreceedByAnotherToken_ThrowArgumentException()
         {
             bool exceptionCaught = false;
@@ -123,14 +121,14 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             catch (ArgumentException ex)
             {
                 exceptionCaught = true;
-                Assert.IsTrue(ex.Message.Contains("Nested Field token"));
-                Assert.IsTrue(ex.Message.Contains("can not be preceeded by another reserved token"));
+                Assert.True(ex.Message.Contains("Nested Field token"));
+                Assert.True(ex.Message.Contains("can not be preceeded by another reserved token"));
             }
 
-            Assert.IsTrue(exceptionCaught, "No Argument Exception caught!");
+            Assert.True(exceptionCaught, "No Argument Exception caught!");
         }
 
-        [TestMethod]
+        [Fact]
         public void Expand_SubSelectionTokenPreceedByAnotherToken_ThrowArgumentException()
         {
             bool exceptionCaught = false;
@@ -143,11 +141,11 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             catch (ArgumentException ex)
             {
                 exceptionCaught = true;
-                Assert.IsTrue(ex.Message.Contains("Begin Subselection token"));
-                Assert.IsTrue(ex.Message.Contains("can not be preceeded by another reserved token"));
+                Assert.True(ex.Message.Contains("Begin Subselection token"));
+                Assert.True(ex.Message.Contains("can not be preceeded by another reserved token"));
             }
 
-            Assert.IsTrue(exceptionCaught, "No Argument Exception caught!");
+            Assert.True(exceptionCaught, "No Argument Exception caught!");
         }
     }
 }

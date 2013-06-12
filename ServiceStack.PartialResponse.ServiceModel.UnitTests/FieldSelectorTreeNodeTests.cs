@@ -1,11 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
 
 namespace ServiceStack.Plugins.PartialResponse.UnitTests
 {
-    [TestClass]
     public class FieldSelectorTreeNodeTests
     {
-        [TestMethod]
+        [Fact]
         public void GetOrAddChildNode_NewChildNodeFromName_ContainsChildNode()
         {
             const string childNodeName = "ChildNode";
@@ -13,8 +12,8 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             var fieldSelectorNode = new FieldSelectorTreeNode(string.Empty);
             FieldSelectorTreeNode childNode = fieldSelectorNode.GetOrAddChildNode(childNodeName);
 
-            Assert.IsTrue(fieldSelectorNode.Children.Contains(childNode));
-            Assert.AreEqual(childNodeName, childNode.MemberName);
+            Assert.True(fieldSelectorNode.Children.Contains(childNode));
+            Assert.Equal(childNodeName, childNode.MemberName);
         }
     }
 }

@@ -1,47 +1,46 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
+using Xunit;
 
 namespace ServiceStack.Plugins.PartialResponse.UnitTests
 {
-    [TestClass]
     public class PartialResponseConfigExtensionsTests
     {
-        [TestMethod]
+        [Fact]
         public void IsSupportedContentType_ContainsSupportedType_ReturnsTrue()
         {
             const string ContentType = "application/json";
             var configMock = MockRepository.GenerateMock<IPartialResponseConfig>();
             configMock.Expect(x => x.SupportedResponseContentType).Return(new List<string> {ContentType, "text/html"});
-            Assert.IsTrue(configMock.IsSupportedContentType(ContentType));
+            Assert.True(configMock.IsSupportedContentType(ContentType));
         }
 
-        [TestMethod]
+        [Fact]
         public void IsSupportedContentType_NullList_ReturnsFalse()
         {
             const string contentType = "application/json";
             var configMock = MockRepository.GenerateMock<IPartialResponseConfig>();
             configMock.Expect(x => x.SupportedResponseContentType).Return(null);
-            Assert.IsFalse(configMock.IsSupportedContentType(contentType));
+            Assert.False(configMock.IsSupportedContentType(contentType));
         }
 
-        [TestMethod]
+        [Fact]
         public void IsSupportedContentType_EmptyList_ReturnsFalse()
         {
             const string ContentType = "application/json";
             var configMock = MockRepository.GenerateMock<IPartialResponseConfig>();
             configMock.Expect(x => x.SupportedResponseContentType).Return(new List<string>());
-            Assert.IsFalse(configMock.IsSupportedContentType(ContentType));
+            Assert.False(configMock.IsSupportedContentType(ContentType));
         }
 
-        [TestMethod]
+        [Fact]
         public void IsSupportedContentType_ListWithoutType_ReturnsFalse()
         {
             const string ContentType = "application/json";
             var configMock = MockRepository.GenerateMock<IPartialResponseConfig>();
             configMock.Expect(x => x.SupportedResponseContentType)
                       .Return(new List<string> {"text/html", "application/xml"});
-            Assert.IsFalse(configMock.IsSupportedContentType(ContentType));
+            Assert.False(configMock.IsSupportedContentType(ContentType));
         }
     }
 }

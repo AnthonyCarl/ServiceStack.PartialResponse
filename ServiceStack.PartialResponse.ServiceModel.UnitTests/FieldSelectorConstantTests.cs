@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace ServiceStack.Plugins.PartialResponse.UnitTests
 {
-    [TestClass]
     public class FieldSelectorConstantTests
     {
-        [TestMethod]
+        [Fact]
         public void StartsWithReservedToken_IterateThroughAllReservedTokens_ReturnsTrue()
         {
             FieldInfo[] properties = typeof (FieldSelectorConstants).GetFields(
@@ -15,26 +14,26 @@ namespace ServiceStack.Plugins.PartialResponse.UnitTests
             {
                 object reservedToken = fieldInfo.GetValue(typeof (FieldSelectorConstants));
                 string reservedTokenAtBeginning = reservedToken + "ThisJustSome S T r i n G";
-                Assert.IsTrue(FieldSelectorConstants.StartsWithReservedToken(reservedTokenAtBeginning));
+                Assert.True(FieldSelectorConstants.StartsWithReservedToken(reservedTokenAtBeginning));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StartsWithReservedToken_NullString_ReturnsFalse()
         {
-            Assert.IsFalse(FieldSelectorConstants.StartsWithReservedToken(null));
+            Assert.False(FieldSelectorConstants.StartsWithReservedToken(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void StartsWithReservedToken_EmptyString_ReturnsFalse()
         {
-            Assert.IsFalse(FieldSelectorConstants.StartsWithReservedToken(string.Empty));
+            Assert.False(FieldSelectorConstants.StartsWithReservedToken(string.Empty));
         }
 
-        [TestMethod]
+        [Fact]
         public void StartsWithReservedToken_WhitespaceString_ReturnsFalse()
         {
-            Assert.IsFalse(FieldSelectorConstants.StartsWithReservedToken("   \t  "));
+            Assert.False(FieldSelectorConstants.StartsWithReservedToken("   \t  "));
         }
     }
 }

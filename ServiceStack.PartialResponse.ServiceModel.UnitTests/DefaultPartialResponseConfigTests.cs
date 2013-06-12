@@ -1,21 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
 
 namespace ServiceStack.Plugins.PartialResponse.UnitTests
 {
-    [TestClass]
     public class DefaultPartialResponseConfigTests
     {
-        [TestMethod]
+        [Fact]
         public void SupportedResponseContentType_DefaultConstructor_DefaultValues()
         {
             var partialResponseConfig = new DefaultPartialResponseConfig();
-            Assert.AreEqual(FieldResolutionMethod.QueryStringAndHeader, partialResponseConfig.FieldResolutionMethod);
-            Assert.AreEqual("fields", partialResponseConfig.FieldsQueryStringName);
-            Assert.AreEqual("x-fields", partialResponseConfig.FieldsHeaderName);
-            Assert.AreEqual(3, partialResponseConfig.SupportedResponseContentType.Count);
-            Assert.IsTrue(partialResponseConfig.SupportedResponseContentType.Contains("application/json"));
-            Assert.IsTrue(partialResponseConfig.SupportedResponseContentType.Contains("application/jsv"));
-            Assert.IsTrue(partialResponseConfig.SupportedResponseContentType.Contains("text/html"));
+            Assert.Equal(FieldResolutionMethod.QueryStringAndHeader, partialResponseConfig.FieldResolutionMethod);
+            Assert.Equal("fields", partialResponseConfig.FieldsQueryStringName);
+            Assert.Equal("x-fields", partialResponseConfig.FieldsHeaderName);
+            Assert.Equal(3, partialResponseConfig.SupportedResponseContentType.Count);
+            Assert.True(partialResponseConfig.SupportedResponseContentType.Contains("application/json"));
+            Assert.True(partialResponseConfig.SupportedResponseContentType.Contains("application/jsv"));
+            Assert.True(partialResponseConfig.SupportedResponseContentType.Contains("text/html"));
         }
     }
 }
