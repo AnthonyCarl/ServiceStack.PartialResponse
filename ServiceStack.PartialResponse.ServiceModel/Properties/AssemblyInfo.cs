@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("ServiceStack.PartialResponse.ServiceModel")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Google Style Partial Responses for ServiceStack.Net")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Anthony Carl")]
 [assembly: AssemblyProduct("ServiceStack.PartialResponse.ServiceModel")]
 [assembly: AssemblyCopyright("Copyright © Anthony Carl 2013")]
 [assembly: AssemblyTrademark("")]
@@ -39,4 +39,3 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.0.*")]
 [assembly: InternalsVisibleTo("ServiceStack.PartialResponse.ServiceModel.UnitTests")]
-[assembly: CLSCompliant(true)]

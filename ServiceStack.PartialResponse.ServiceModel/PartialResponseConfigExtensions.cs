@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ServiceStack.Common;
 
 namespace ServiceStack.Plugins.PartialResponse
 {
