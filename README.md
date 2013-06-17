@@ -11,7 +11,7 @@ ServiceStack.PartialResponse.ServiceModel
 I wanted to implement this as a ServiceStack `IPlugin`, but I was unable to figure out how to get the access I needed to the response DTO for my approach. Currently, this is implemented as an `IRequestContext` extension.
 
 ##Providing Field Selectors
-Field Selectors can be passed using the header or query string. By default field selectors are combined form both. Duplicate field selectors are reduced. The field selector is applied to all entries in a list if the selector referes to a list. 
+Field Selectors can be passed using the header or query string. By default field selectors are combined form both. Duplicate field selectors are reduced. The field selector is applied to all entries in a list if the selector refers to a list. 
 
 | Method | Example |
 |:--:|:--|
@@ -78,7 +78,15 @@ Full Response min/max/avg 18ms/383ms/25.624ms
 ===================================
 ```
 
+##Using the Code
+
+* [Install the NuGet Package](https://nuget.org/packages/ServiceStack.PartialResponse.ServiceModel)
+* You can check out the code and run build.bat.
+  * It will create NuGet packages you can consume in `.\ReleasePackages` or you can directly use the resulting binaries. 
+  * If you use a custom made NuGet package and have an internal symbol server, you may be interested in the `IndexSrc` build target to properly index the source code back to GitHub.
+
+
+
 ##ToDo
 
-- Publish NuGet Package
-- Finish Code for Client Side support
+- Publish Code for Client Side support. I have working strongly typed implementation (using expression trees) but it needs to be cleaned up for release.
