@@ -6,8 +6,8 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/AnthonyCarl/ServiceStack.PartialResponse.ServiceModel/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/AnthonyCarl/ServiceStack.PartialResponse.ServiceModel</projectUrl>
+    <licenseUrl>https://github.com/AnthonyCarl/ServiceStack.PartialResponse/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/AnthonyCarl/ServiceStack.PartialResponse</projectUrl>
     <iconUrl>http://www.servicestack.net/logo-100x100.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
