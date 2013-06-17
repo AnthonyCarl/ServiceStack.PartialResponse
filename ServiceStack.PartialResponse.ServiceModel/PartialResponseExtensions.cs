@@ -3,6 +3,9 @@ using ServiceStack.ServiceHost;
 
 namespace ServiceStack.PartialResponse.ServiceModel
 {
+    /// <summary>
+    /// Takes a DTO and returns the appropriate partial response for the given configuration.
+    /// </summary>
     public static class PartialResponseExtensions
     {
         /// <summary>
