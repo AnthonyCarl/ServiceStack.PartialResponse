@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Xunit;
 
-namespace ServiceStack.Plugins.PartialResponse.UnitTests
+namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
 {
     public class PartialResponsinatorTests
     {

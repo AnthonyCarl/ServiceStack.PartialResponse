@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ServiceStack.Plugins.PartialResponse
+namespace ServiceStack.PartialResponse.ServiceModel
 {
     internal sealed class FieldSelectorTreeNode
     {

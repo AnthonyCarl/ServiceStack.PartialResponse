@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ServiceStack.Plugins.PartialResponse
+namespace ServiceStack.PartialResponse.ServiceModel
 {
     internal static class FieldSelectorParser
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ServiceStack.Plugins.PartialResponse.UnitTests
+namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
 {
     public class FakeDto
     {

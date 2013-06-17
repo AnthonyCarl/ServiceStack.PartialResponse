@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 
-namespace ServiceStack.Plugins.PartialResponse
+namespace ServiceStack.PartialResponse.ServiceModel
 {
     internal sealed class PartialResponsinator
     {

@@ -1,6 +1,6 @@
 ﻿using ServiceStack.ServiceHost;
 
-namespace ServiceStack.Plugins.PartialResponse
+namespace ServiceStack.PartialResponse.ServiceModel
 {
     internal static class FieldsRetriever
     {

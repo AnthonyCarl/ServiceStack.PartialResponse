@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ServiceStack.ServiceHost;
 
-namespace ServiceStack.Plugins.PartialResponse
+namespace ServiceStack.PartialResponse.ServiceModel
 {
     public static class PartialResponseExtensions
     {

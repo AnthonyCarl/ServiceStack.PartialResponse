@@ -1,4 +1,4 @@
-﻿namespace ServiceStack.Plugins.PartialResponse
+﻿namespace ServiceStack.PartialResponse.ServiceModel
 {
     public enum FieldResolutionMethod
     {
