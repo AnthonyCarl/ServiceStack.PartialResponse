@@ -31,7 +31,7 @@ task IndexSrc -depends Test {
   invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$projectSrcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -verbose -branch master -sourcesroot '$projectSrcRoot' -dbgToolsPath '$srcIndexTools'"
 }
 
-task Pack -depends IndexSrc {
+task Pack -depends Test {
   mkdir -p "$nugetOutputDir" -force
   nuget pack "$projectBaseName\$projectBaseName.csproj" -Symbols -Properties Configuration=$configuration -OutputDirectory "$nugetOutputDir" 
 }
