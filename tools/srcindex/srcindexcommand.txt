@@ -1,0 +1,1 @@
+.\tools\srcindex\github-sourceindexer.ps1 -symbolsFolder g:\github\ServiceStack.PartialResponse -userId anthonycarl -repository ServiceStack.PartialResponse -branch master -sourcesroot g:\github\ServiceStack.PartialResponse -verbose -dbgToolsPath G:\github\ServiceStack.PartialResponse\tools\srcindex

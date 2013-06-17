@@ -1,8 +1,9 @@
 Import-Module .\packages\psake.4.2.0.1\tools\psake.psm1
 
 properties {
-    # $home = $psake.build_script_dir + "/../.."
     $configuration = "Release"
+    $projectSrcRoot = get-location
+    $srcIndexTools = "$projectSrcRoot\tools\srcindex"
     $projectBaseName = "ServiceStack.PartialResponse.ServiceModel"
     $testProjectBaseName = "$projectBaseName.UnitTests"
     $testDll = "$testProjectBaseName\bin\$configuration\$testProjectBaseName.dll"
@@ -14,19 +15,23 @@ properties {
 
 task Default -depends Pack
 
-task Compile -depends Clean {
-  msbuild "$sln_file" /p:Configuration=$configuration 
-}
-
 task Clean {
   msbuild "$sln_file" /t:Clean /p:Configuration=$configuration
+}
+
+task Compile -depends Clean {
+  msbuild "$sln_file" /p:Configuration=$configuration 
 }
 
 task Test -depends Compile {
   .$xunitRunner "$testDll"
 }
 
-task Pack -depends Test {
+task IndexSrc -depends Test {
+  invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$projectSrcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -branch master -sourcesroot '$projectSrcRoot' -verbose -dbgToolsPath '$srcIndexTools'"
+}
+
+task Pack -depends IndexSrc {
   mkdir -p "$nugetOutputDir" -force
   nuget pack "$projectBaseName\$projectBaseName.csproj" -Symbols -Properties Configuration=$configuration -OutputDirectory "$nugetOutputDir" 
 }
