@@ -28,7 +28,7 @@ task Test -depends Compile {
 }
 
 task IndexSrc -depends Test {
-  invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$projectSrcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -branch master -sourcesroot '$projectSrcRoot' -verbose -dbgToolsPath '$srcIndexTools'"
+  invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$projectSrcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -branch master -sourcesroot '$projectSrcRoot' -dbgToolsPath '$srcIndexTools'"
 }
 
 task Pack -depends IndexSrc {
