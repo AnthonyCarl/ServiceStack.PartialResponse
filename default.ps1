@@ -1,38 +1,40 @@
-Import-Module .\packages\psake.4.2.0.1\tools\psake.psm1
+Import-Module .\tools\psake.4.2.0.1\tools\psake.psm1
 
 properties {
     $configuration = "Release"
-    $projectSrcRoot = get-location
-    $srcIndexTools = "$projectSrcRoot\tools\srcindex"
-    $projectBaseName = "ServiceStack.PartialResponse.ServiceModel"
-    $testProjectBaseName = "$projectBaseName.UnitTests"
-    $testDll = "$testProjectBaseName\bin\$configuration\$testProjectBaseName.dll"
-    $sln_file = ".\$projectBaseName.sln"
+    $rootLocation = get-location
+    $srcRoot = "$rootLocation\src"
+    $srcIndexTools ="$rootLocation\tools\srcindex"
+    $serviceModelProjectBaseName = "ServiceStack.PartialResponse.ServiceModel"
+    $serviceModelCsprojFile = "$srcRoot\$serviceModelProjectBaseName\$serviceModelProjectBaseName\$serviceModelProjectBaseName.csproj"
+    $unitTestNamePart = "UnitTests"
+    $serviceModelTestDll = "$srcRoot\$serviceModelProjectBaseName\$serviceModelProjectBaseName.$unitTestNamePart\bin\$configuration\$serviceModelProjectBaseName.$unitTestNamePart.dll"
+    $ServiceModelSlnFile = "$srcRoot\$serviceModelProjectBaseName\$serviceModelProjectBaseName.sln"
     $framework = "4.0"
-    $xunitRunner = ".\packages\xunit.runners.1.9.1\tools\xunit.console.clr4.exe"
+    $xunitRunner = ".\tools\xunit.runners.1.9.1\tools\xunit.console.clr4.exe"
     $nugetOutputDir = ".\ReleasePackages"
 }
 
 task Default -depends Pack
 
 task Clean {
-  msbuild "$sln_file" /t:Clean /p:Configuration=$configuration
+  msbuild "$ServiceModelSlnFile" /t:Clean /p:Configuration=$configuration
 }
 
 task Compile -depends Clean {
-  msbuild "$sln_file" /p:Configuration=$configuration 
+  msbuild "$ServiceModelSlnFile" /p:Configuration=$configuration 
 }
 
 task Test -depends Compile {
-  .$xunitRunner "$testDll"
+  .$xunitRunner "$serviceModelTestDll"
 }
 
 task IndexSrc -depends Test {
-  invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$projectSrcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -verbose -branch master -sourcesroot '$projectSrcRoot' -dbgToolsPath '$srcIndexTools'"
+  invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$srcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -verbose -branch master -sourcesroot '$srcRoot' -dbgToolsPath '$srcIndexTools'"
 }
 
 task Pack -depends Test {
   mkdir -p "$nugetOutputDir" -force
-  nuget pack "$projectBaseName\$projectBaseName.csproj" -Symbols -Properties Configuration=$configuration -OutputDirectory "$nugetOutputDir" 
+  nuget pack "$serviceModelCsprojFile" -Symbols -Properties Configuration=$configuration -OutputDirectory "$nugetOutputDir"
 }
 
