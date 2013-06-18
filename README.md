@@ -84,7 +84,10 @@ Full Response min/max/avg 18ms/383ms/25.624ms
 * You can check out the code and run build.bat.
   * It will create NuGet packages you can consume in `.\ReleasePackages` or you can directly use the resulting binaries. 
   * If you use a custom made NuGet package and have an internal symbol server, you may be interested in the `IndexSrc` build target to properly index the source code back to GitHub.
-
+* Build requirements
+  * .Net 4.0
+  * Powershell 2.0
+  * NuGet command line in path
 
 
 ##ToDo
