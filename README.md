@@ -23,7 +23,7 @@ If field selectors are passed in the query string, make sure it is properly enco
 ##Field Selector Reserved Characters
 | Character | Meaning |
 |:--:|:--|
-| `,`  | Separates multimple field selectors |
+| `,`  | Separates multiple field selectors |
 | `/` | Field sub selector  |
 | `(` | Begin subselection expression |
 | `)` | End subselection expression |
