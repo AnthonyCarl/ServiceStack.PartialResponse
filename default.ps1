@@ -1,4 +1,9 @@
-Import-Module .\tools\psake.4.2.0.1\tools\psake.psm1
+if((Get-Module | Where-Object {$_.Name -eq "psake"}) -eq $null) 
+    { 
+        Write-Host "psake module not found, importing it" 
+        $scriptPath = Split-Path $MyInvocation.InvocationName 
+        Import-Module .\tools\psake.4.2.0.1\tools\psake.psm1
+    } 
 
 properties {
     $configuration = "Release"
