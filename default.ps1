@@ -19,6 +19,7 @@ properties {
     $framework = "4.0"
     $xunitRunner = ".\tools\xunit.runners.1.9.1\tools\xunit.console.clr4.exe"
     $nugetOutputDir = ".\ReleasePackages"
+    $nugetExe = "$rootLocation\tools\nuget\nuget.exe"
 }
 
 task Default -depends Pack
@@ -41,6 +42,6 @@ task IndexSrc -depends Test {
 
 task Pack -depends Test {
   mkdir -p "$nugetOutputDir" -force
-  nuget pack "$serviceModelCsprojFile" -Symbols -Properties Configuration=$configuration -OutputDirectory "$nugetOutputDir"
+  invoke-expression "& '$nugetExe' pack '$serviceModelCsprojFile' -Symbols -Properties Configuration=$configuration -OutputDirectory '$nugetOutputDir'"
 }
 
