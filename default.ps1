@@ -22,26 +22,32 @@ properties {
     $nugetExe = "$rootLocation\tools\nuget\nuget.exe"
 }
 
-task Default -depends Pack
+task Default -depends BuildAll
 
-task Clean {
+task CleanServiceModel {
+  write-host $myParameter
   msbuild "$ServiceModelSlnFile" /t:Clean /p:Configuration=$configuration
 }
 
-task Compile -depends Clean {
+task CompileServiceModel -depends CleanServiceModel {
   msbuild "$ServiceModelSlnFile" /p:Configuration=$configuration 
 }
 
-task Test -depends Compile {
+task TestServiceModel -depends CompileServiceModel {
   .$xunitRunner "$serviceModelTestDll"
 }
 
-task IndexSrc -depends Test {
+task IndexSrcServiceModel -depends TestServiceModel {
   invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$srcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -verbose -branch master -sourcesroot '$srcRoot' -dbgToolsPath '$srcIndexTools'"
 }
 
-task Pack -depends Test {
+task PackServiceModel -depends TestServiceModel {
   mkdir -p "$nugetOutputDir" -force
   invoke-expression "& '$nugetExe' pack '$serviceModelCsprojFile' -Symbols -Properties Configuration=$configuration -OutputDirectory '$nugetOutputDir'"
 }
 
+task Hello {
+  Write-Host "Hello"
+}
+
+task BuildAll -Depends PackServiceModel
