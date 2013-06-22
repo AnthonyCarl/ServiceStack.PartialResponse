@@ -81,6 +81,7 @@ Full Response min/max/avg 18ms/383ms/25.624ms
 ##Using the Code
 
 * [Install the NuGet Package](https://nuget.org/packages/ServiceStack.PartialResponse.ServiceModel)
+* [NuGet Packages from Latest Successful Build](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt1037&buildId=lastSuccessful)
 * You can check out the code and run build.bat.
   * It will create NuGet packages you can consume in `.\ReleasePackages` or you can directly use the resulting binaries. 
   * If you use a custom made NuGet package and have an internal symbol server, you may be interested in the `IndexSrc` build target to properly index the source code back to GitHub.
@@ -92,3 +93,7 @@ Full Response min/max/avg 18ms/383ms/25.624ms
 ##ToDo
 
 - Publish Code for Client Side support. I have working strongly typed implementation (using expression trees) but it needs to be cleaned up for release.
+
+![CodeBetter CI](http://www.jetbrains.com/img/banners/Codebetter.png)
+
+Special Thanks to [JetBrains](http://www.jetbrains.com/teamcity) and [CodeBetter](http://codebetter.com/codebetter-ci/) for hosting this project!
