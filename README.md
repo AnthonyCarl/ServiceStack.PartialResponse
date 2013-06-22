@@ -87,7 +87,6 @@ Full Response min/max/avg 18ms/383ms/25.624ms
 * Build requirements
   * .Net 4.0
   * Powershell 2.0
-  * NuGet command line in path
 
 
 ##ToDo
