@@ -81,7 +81,7 @@ Full Response min/max/avg 18ms/383ms/25.624ms
 ##Using the Code
 
 * [Install the NuGet Package](https://nuget.org/packages/ServiceStack.PartialResponse.ServiceModel)
-* [NuGet Packages from Latest Successful Build](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt1037&buildId=lastSuccessful)
+* [NuGet Packages from Latest Successful Build](http://teamcity.codebetter.com/viewLog.html?buildId=lastSuccessful&buildTypeId=bt1037&tab=artifacts)
 * You can check out the code and run build.bat.
   * It will create NuGet packages you can consume in `.\ReleasePackages` or you can directly use the resulting binaries. 
   * If you use a custom made NuGet package and have an internal symbol server, you may be interested in the `IndexSrc` build target to properly index the source code back to GitHub.
