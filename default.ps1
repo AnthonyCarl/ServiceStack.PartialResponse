@@ -25,7 +25,6 @@ properties {
 task Default -depends BuildAll
 
 task CleanServiceModel {
-  write-host $myParameter
   msbuild "$ServiceModelSlnFile" /t:Clean /p:Configuration=$configuration
 }
 
@@ -44,10 +43,6 @@ task IndexSrcServiceModel -depends TestServiceModel {
 task PackServiceModel -depends TestServiceModel {
   mkdir -p "$nugetOutputDir" -force
   invoke-expression "& '$nugetExe' pack '$serviceModelCsprojFile' -Symbols -Properties Configuration=$configuration -OutputDirectory '$nugetOutputDir'"
-}
-
-task Hello {
-  Write-Host "Hello"
 }
 
 task BuildAll -Depends PackServiceModel
