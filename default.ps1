@@ -4,6 +4,26 @@ if((Get-Module | Where-Object {$_.Name -eq "psake"}) -eq $null)
         $scriptPath = Split-Path $MyInvocation.InvocationName 
         Import-Module .\tools\psake.4.2.0.1\tools\psake.psm1
     } 
+Import-Module .\tools\SetVersion.psm1
+
+function Get-VersionNumber
+{
+  $completeVersionNumber = ""
+
+  $buildNumber = $Env:BUILD_NUMBER
+  
+  if([string]::IsNullOrEmpty($buildNumber))
+  {
+    $completeVersionNumber = $majorMinorVersion + ".*"
+  }
+  else
+  {
+    #running in TeamCity
+    $completeVersionNumber = $majorMinorVersion + "." + $buildNumber
+  }
+
+  return ,$completeVersionNumber
+}
 
 properties {
     $configuration = "Release"
@@ -20,11 +40,27 @@ properties {
     $xunitRunner = ".\tools\xunit.runners.1.9.1\tools\xunit.console.clr4.exe"
     $nugetOutputDir = ".\ReleasePackages"
     $nugetExe = "$rootLocation\tools\nuget\nuget.exe"
+    $versionFile = ".\MajorMinorVersion.txt"
+    $majorMinorVersion = Get-Content $versionFile
+    $completeVersionNumber = Get-VersionNumber
+    $versionSwitch = ""
+    
+    if(!$completeVersionNumber.EndsWith(".*"))
+    {
+      #running in TeamCity
+      $versionSwitch = "-Version $completeVersionNumber"
+      Write-Host "##teamcity[buildNumber '$completeVersionNumber']"
+    }
 }
 
 task Default -depends BuildAll
 
-task CleanServiceModel {
+task SetVersionServiceModel {
+  Write-Host "Setting version to $completeVersionNumber"
+  Set-Version $completeVersionNumber
+}
+
+task CleanServiceModel -depends SetVersionServiceModel {
   msbuild "$ServiceModelSlnFile" /t:Clean /p:Configuration=$configuration
 }
 
