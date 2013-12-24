@@ -44,6 +44,7 @@ properties {
     $versionFile = ".\MajorMinorVersion.txt"
     $majorMinorVersion = Get-Content $versionFile
     $completeVersionNumber = Get-VersionNumber
+	$gitHubRepoUrl = "https://github.com/AnthonyCarl/ServiceStack.PartialResponse"
     $versionSwitch = ""
     
     if(!$completeVersionNumber.EndsWith(".*"))
