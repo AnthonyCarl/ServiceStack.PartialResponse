@@ -36,6 +36,7 @@ properties {
     $unitTestNamePart = "UnitTests"
     $serviceModelTestDll = "$srcRoot\$serviceModelNamePart\$serviceModelProjectBaseName.$unitTestNamePart\bin\$configuration\$serviceModelProjectBaseName.$unitTestNamePart.dll"
     $ServiceModelSlnFile = "$srcRoot\$serviceModelNamePart\$serviceModelProjectBaseName.sln"
+	$serviceModelNuspecFile ="$srcRoot\$serviceModelNamePart\$serviceModelProjectBaseName\$serviceModelProjectBaseName.nuspec"
     $framework = "4.0"
     $xunitRunner = ".\tools\xunit.runners.1.9.1\tools\xunit.console.clr4.exe"
     $nugetOutputDir = ".\ReleasePackages"
@@ -76,8 +77,44 @@ task IndexSrcServiceModel -depends TestServiceModel {
   invoke-expression "& '$srcIndexTools\github-sourceindexer.ps1' -symbolsFolder '$srcRoot' -userId anthonycarl -repository ServiceStack.PartialResponse -verbose -branch master -sourcesroot '$srcRoot' -dbgToolsPath '$srcIndexTools'"
 }
 
-task PackServiceModel -depends TestServiceModel {
-  mkdir -p "$nugetOutputDir" -force
+task SetReleaseNotesServiceModel -depends TestServiceModel {
+  $releaseNotesText = $Env:ReleaseNotes
+  $vcsNumber = $Env:BUILD_VCS_NUMBER
+
+  if(![string]::IsNullOrEmpty($vcsNumber))
+  {
+    Write-Host "Found VCS number: $vcsNumber"
+    $releaseNotesText += [System.Environment]::NewLine + [System.Environment]::NewLine + "Includes changes up to and including: $gitHubRepoUrl/commit/$vcsNumber" + [System.Environment]::NewLine
+  }
+  else
+  {
+    Write-Host "No VCS number found."
+  }
+
+  if(![string]::IsNullOrEmpty($releaseNotesText))
+  {
+    Write-Host "Setting release notes to:"
+    Write-Host "$releaseNotesText"
+
+    $nuspecContents = [Xml](Get-Content "$serviceModelNuspecFile")
+    $releaseNotesNode = $nuspecContents.package.metadata.SelectSingleNode("releaseNotes")
+    if($releaseNotesNode -eq $null)
+    {
+      $releaseNotesNode = $nuspecContents.CreateElement('releaseNotes')
+      $ignore = $nuspecContents.package.metadata.AppendChild($releaseNotesNode)
+    }
+
+    $ignore = $releaseNotesNode.InnerText = $releaseNotesText
+    $nuspecContents.Save("$serviceModelNuspecFile")
+  }
+  else
+  {
+    Write-Host "No release notes added."
+  }
+}
+
+task PackServiceModel -depends SetReleaseNotesServiceModel {
+  mkdir -path "$nugetOutputDir" -force
   invoke-expression "& '$nugetExe' pack '$serviceModelCsprojFile' -Symbols -Properties Configuration=$configuration -OutputDirectory '$nugetOutputDir'"
 }
 
