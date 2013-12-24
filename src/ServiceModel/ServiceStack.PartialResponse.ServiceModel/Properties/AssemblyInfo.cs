@@ -39,3 +39,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("1.0.*")]
 [assembly: InternalsVisibleTo("ServiceStack.PartialResponse.ServiceModel.UnitTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2") ]

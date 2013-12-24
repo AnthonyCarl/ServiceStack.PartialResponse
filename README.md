@@ -8,7 +8,7 @@ ServiceStack.PartialResponse.ServiceModel
 
 `application/xml` is NOT currently supported.
 
-I wanted to implement this as a ServiceStack `IPlugin`, but I was unable to figure out how to get the access I needed to the response DTO for my approach. Currently, this is implemented as an `IRequestContext` extension.
+This is implemented as an `IRequestContext` extension. It can easily be incorporated into a ServiceStack plugin as part of the final processing of your response.
 
 ##Providing Field Selectors
 Field Selectors can be passed using the header or query string. By default field selectors are combined form both. Duplicate field selectors are reduced. The field selector is applied to all entries in a list if the selector refers to a list. 
@@ -94,6 +94,7 @@ Full Response min/max/avg 18ms/383ms/25.624ms
 
 - Publish Code for Client Side support. I have working strongly typed implementation (using expression trees) but it needs to be cleaned up for release.
 
+##[Release Notes](ReleaseNotes.md)
 ![CodeBetter CI](http://www.jetbrains.com/img/banners/Codebetter.png)
 
 Special Thanks to [JetBrains](http://www.jetbrains.com/teamcity) and [CodeBetter](http://codebetter.com/codebetter-ci/) for hosting this project!

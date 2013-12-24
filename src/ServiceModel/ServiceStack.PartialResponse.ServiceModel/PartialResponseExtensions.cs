@@ -57,7 +57,7 @@ namespace ServiceStack.PartialResponse.ServiceModel
             if (!string.IsNullOrWhiteSpace(fields) && isSupportedContentType)
             {
                 List<FieldSelectorTreeNode> fieldSelectors = FieldSelectorParser.Expand(fields);
-                var responsinator = new PartialResponsinator(fieldSelectors);
+                var responsinator = new PartialResponsinator(fieldSelectors, new PropertyValueGetterFactory());
                 processedResponse = responsinator.GetPartialResponse(dto);
             }
 

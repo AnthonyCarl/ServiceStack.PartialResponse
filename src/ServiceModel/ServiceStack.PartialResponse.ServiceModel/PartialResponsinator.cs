@@ -1,21 +1,27 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Reflection;
 
 namespace ServiceStack.PartialResponse.ServiceModel
 {
     internal sealed class PartialResponsinator
     {
         private readonly List<FieldSelectorTreeNode> _partialSelectNodes;
+        private readonly IPropertyValueGetterFactory _propertyGetterFactory;
 
-        private readonly ConcurrentDictionary<string, PropertyInfo> _propertyInfoCache =
-            new ConcurrentDictionary<string, PropertyInfo>();
+        private readonly ConcurrentDictionary<string, IPropertyValueGetter> _propertyInfoCache =
+            new ConcurrentDictionary<string, IPropertyValueGetter>();
 
-        public PartialResponsinator(List<FieldSelectorTreeNode> partialSelectNodes)
+        public PartialResponsinator(List<FieldSelectorTreeNode> partialSelectNodes, IPropertyValueGetterFactory propertyGetterFactory)
         {
+            if (propertyGetterFactory == null)
+            {
+                throw new ArgumentNullException("propertyGetterFactory");
+            }
             _partialSelectNodes = partialSelectNodes;
+            _propertyGetterFactory = propertyGetterFactory;
         }
 
         public dynamic GetPartialResponse(object response)
@@ -26,9 +32,12 @@ namespace ServiceStack.PartialResponse.ServiceModel
             }
 
             var asEnumerable = response as IEnumerable;
-            string typeFullName = asEnumerable == null
-                                      ? response.GetType().FullName
-                                      : asEnumerable.GetType().GetGenericArguments()[0].FullName;
+
+            Type type = asEnumerable.IsGenericEnumerable()
+                ? asEnumerable.GetType().GetGenericArguments()[0]
+                : response.GetType();
+
+            var typeFullName = type.IsDynamic() ? Guid.NewGuid().ToString() : type.FullName;
 
             dynamic partialResponse = TraverseSelectorNodes(response, _partialSelectNodes, typeFullName);
 
@@ -45,7 +54,7 @@ namespace ServiceStack.PartialResponse.ServiceModel
 
             var asEnumerable = responseNode as IEnumerable;
 
-            if (asEnumerable != null)
+            if (asEnumerable.IsGenericEnumerable())
             {
                 return TraverseEnumerableObject(asEnumerable, selectorNodes, parentSelectorPath);
             }
@@ -98,34 +107,32 @@ namespace ServiceStack.PartialResponse.ServiceModel
         {
             string currentPathSelector = FormatSelectorPath(parentSelectorPath, selectorNode);
 
-            PropertyInfo currentProperty = _propertyInfoCache.GetOrAdd(
-                currentPathSelector,
-                key =>
-                responseNode.GetType().GetProperty(
-                    selectorNode.MemberName,
-                    BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)
-                );
+            IPropertyValueGetter currentProperty =
+                _propertyInfoCache.GetOrAdd(
+                    currentPathSelector,
+                    key => _propertyGetterFactory.CreatePropertyValueGetter(responseNode, selectorNode.MemberName)
+                    );
 
             if (currentProperty == null)
             {
                 return new KeyValuePair<string, object>();
             }
 
-            object value = currentProperty.GetValue(responseNode, null);
+            object value = currentProperty.GetPropertyValue(responseNode);
 
             if (selectorNode.Children.IsEmpty())
             {
-                return new KeyValuePair<string, object>(currentProperty.Name, value);
+                return new KeyValuePair<string, object>(currentProperty.PropertyName, value);
             }
 
             object keyValue = TraverseSelectorNodes(value, selectorNode.Children, currentPathSelector);
 
-            return new KeyValuePair<string, object>(currentProperty.Name, keyValue);
+            return new KeyValuePair<string, object>(currentProperty.PropertyName, keyValue);
         }
 
         private static string FormatSelectorPath(string rootPath, FieldSelectorTreeNode subNode)
         {
-            return string.Format("{0}/{1}", rootPath, subNode.MemberName);
+            return string.Format("{0}{1}{2}", rootPath, FieldSelectorConstants.NestedFieldSelector, subNode.MemberName);
         }
     }
 }

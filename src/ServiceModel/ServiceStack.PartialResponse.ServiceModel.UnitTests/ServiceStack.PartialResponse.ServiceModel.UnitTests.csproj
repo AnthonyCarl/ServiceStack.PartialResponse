@@ -59,6 +59,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="DynamicPropertyValueGetterTests.cs" />
+    <Compile Include="EnumerableExtensionsTests.cs" />
     <Compile Include="FakeDto.cs" />
     <Compile Include="FakeFlatDto.cs" />
     <Compile Include="FakeLink.cs" />
@@ -74,6 +76,9 @@
     <Compile Include="PartialResponseConfigExtensionsTests.cs" />
     <Compile Include="PartialResponseExtensionsTests.cs" />
     <Compile Include="CollectionExtensionsTests.cs" />
+    <Compile Include="PropertyInfoPropertyValueGetterTests.cs" />
+    <Compile Include="PropertyValueGetterFactoryTests.cs" />
+    <Compile Include="TypeExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ServiceStack.PartialResponse.ServiceModel\ServiceStack.PartialResponse.ServiceModel.csproj">
