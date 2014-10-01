@@ -49,7 +49,7 @@ Currently `*` is not supported.
 ```c#
 public object Get(MyRequestDto request)
 {
-  MyResponseDto response = SomeMethodThatGenerateTheResponse(request);
+  MyResponseDto response = SomeMethodThatGeneratesTheResponse(request);
   return base.requestContext.ToPartialResponse(response)
 }
 ```
@@ -57,7 +57,7 @@ public object Get(MyRequestDto request)
 ```C#
 public object Get(MyRequestDto request)
 {
-  MyResponseDto response = SomeMethodThatGenerateTheResponse(request);
+  MyResponseDto response = SomeMethodThatGeneratesTheResponse(request);
   return base.ToOptimizedResult(base.requestContext.ToPartialResponse(response))
 }
 ```
@@ -68,7 +68,7 @@ The DTO used contains 32 properties. The response is a list of 250 of these DTOs
 
 ```
 ===================================
-Completed 1000 Test Interations
+Completed 1000 Test Iterations
 ===================================
 
 ===================================
