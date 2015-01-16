@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ServiceStack.PartialResponse.ServiceModel</name>
+    </assembly>
+    <members>
+        <member name="T:ServiceStack.PartialResponse.ServiceModel.DefaultPartialResponseConfig">
+            <summary>
+                Supports "application/json", "application/jsv, and"text/html" content type with fields passed in via the
+                header "x-fields" and query string "fields".
+            </summary>
+        </member>
+        <member name="T:ServiceStack.PartialResponse.ServiceModel.IPartialResponseConfig">
+            <summary>
+            Implement this interface to provide custom configuration for partial responses.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.IPartialResponseConfig.SupportedResponseContentType">
+            <summary>
+            Lists custom supported content types.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.IPartialResponseConfig.FieldResolutionMethod">
+            <summary>
+            Specifies field resolution method.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.IPartialResponseConfig.FieldsHeaderName">
+            <summary>
+            The name of the custom header for field selectors.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.IPartialResponseConfig.FieldsQueryStringName">
+            <summary>
+            The query string parameter name for the field selectors.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.PartialResponse.ServiceModel.DefaultPartialResponseConfig.#ctor">
+            <summary>
+            Default partial Response Config.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.DefaultPartialResponseConfig.SupportedResponseContentType">
+            <summary>
+            List of content types that are supported for partial responses.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.DefaultPartialResponseConfig.FieldResolutionMethod">
+            <summary>
+            Field selectors are determined by combining the header and query string parameter.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.DefaultPartialResponseConfig.FieldsHeaderName">
+            <summary>
+            Name of the headers that contains the field selectors.
+            </summary>
+        </member>
+        <member name="P:ServiceStack.PartialResponse.ServiceModel.DefaultPartialResponseConfig.FieldsQueryStringName">
+            <summary>
+            Name of the query string parameter that contains the field selectors.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.PartialResponse.ServiceModel.FieldResolutionMethod">
+            <summary>
+            Determines where field selectors come from (i.e. query string, header, etc).
+            </summary>
+        </member>
+        <member name="F:ServiceStack.PartialResponse.ServiceModel.FieldResolutionMethod.HeaderOnly">
+            <summary>
+            Only the header is use to determine field selectors.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.PartialResponse.ServiceModel.FieldResolutionMethod.QueryStringOnly">
+            <summary>
+            Only the query string parameter is used to determine field selectors.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.PartialResponse.ServiceModel.FieldResolutionMethod.HeaderThenQueryString">
+            <summary>
+            Uses the header to determine field selectors. If the header is empty, the query string parameter is used.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.PartialResponse.ServiceModel.FieldResolutionMethod.QueryStringThenHeader">
+            <summary>
+            Uses the query string parameter to determine field selectors. If the query string parameter is empty, the header is used.
+            </summary>
+        </member>
+        <member name="F:ServiceStack.PartialResponse.ServiceModel.FieldResolutionMethod.QueryStringAndHeader">
+            <summary>
+            Combines field selectors from the query string parameter and header.
+            </summary>
+        </member>
+        <member name="T:ServiceStack.PartialResponse.ServiceModel.PartialResponseExtensions">
+            <summary>
+            Takes a DTO and returns the appropriate partial response for the given configuration.
+            </summary>
+        </member>
+        <member name="M:ServiceStack.PartialResponse.ServiceModel.PartialResponseExtensions.ToPartialResponse``1(ServiceStack.Web.IRequest,``0)">
+            <summary>
+                <para>
+                    Returns a partial response of the given Dto if fileds are specified in the request context and the content
+                    type is supported.
+                </para>
+                <para>
+                    Uses <seealso cref="T:ServiceStack.PartialResponse.ServiceModel.DefaultPartialResponseConfig"/> for partial response configuration.
+                </para>
+            </summary>
+            <typeparam name="T">Dto Class</typeparam>
+            <param name="requestContext">Servicestack Request Context</param>
+            <param name="dto">Dto to process to partial response.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ServiceStack.PartialResponse.ServiceModel.PartialResponseExtensions.ToPartialResponse``1(ServiceStack.Web.IRequest,``0,ServiceStack.PartialResponse.ServiceModel.IPartialResponseConfig)">
+            <summary>
+                <para>
+                    Returns a partial response of the given Dto if fileds are specified in the request context and the content
+                    type is supported.
+                </para>
+                <para>Configuration is provided by the caller.</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="requestContext"></param>
+            <param name="dto"></param>
+            <param name="partialResponseConfig"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
