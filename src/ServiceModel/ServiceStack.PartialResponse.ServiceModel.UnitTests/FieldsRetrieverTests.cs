@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Specialized;
 using Rhino.Mocks;
-using ServiceStack.ServiceHost;
+using ServiceStack;
 using Xunit;
+using ServiceStack.Web;
 
 namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
 {
     public class FieldsRetrieverTests
     {
-        private IRequestContext GenerateRequestMockWithQueryString(
+        private IRequest GenerateRequestMockWithQueryString(
             string fieldsQueryStringName, params string[] fieldValues)
         {
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var mockHttpRequest = MockRepository.GenerateStub<IHttpRequest>();
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
             var nameValueCollection = MockRepository.GenerateStub<NameValueCollection>();
             string queryValue = string.Join(",", fieldValues);
             nameValueCollection.Expect(x => x.Get(fieldsQueryStringName)).Return(queryValue);
-            mockHttpRequest.Expect(x => x.QueryString).Return(nameValueCollection);
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(mockHttpRequest);
+            reqContextMock.Expect(x => x.QueryString).Return(new NameValueCollectionWrapper(nameValueCollection));
 
             return reqContextMock;
         }
@@ -25,9 +24,7 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         [Fact]
         public void FieldsFromQueryString_NoFields_ReturnsEmptyString()
         {
-            var mockRequestContext = MockRepository.GenerateStub<IRequestContext>();
-            var mockHttpRequest = MockRepository.GenerateStub<IHttpRequest>();
-            mockRequestContext.Expect(x => x.Get<IHttpRequest>()).Return(mockHttpRequest);
+            var mockRequestContext = MockRepository.GenerateStub<IRequest>();
 
             Assert.Equal(
                 string.Empty,
@@ -40,7 +37,7 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         {
             var partialReponseConfig = new DefaultPartialResponseConfig();
             const string IdField = "id";
-            IRequestContext reqContextMock =
+            IRequest reqContextMock =
                 GenerateRequestMockWithQueryString(partialReponseConfig.FieldsQueryStringName, IdField);
 
             Assert.Equal(
@@ -54,7 +51,7 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             var partialReponseConfig = new DefaultPartialResponseConfig();
             const string IdField = "id";
             const string NameField = "name";
-            IRequestContext reqContextMock = GenerateRequestMockWithQueryString(
+            IRequest reqContextMock = GenerateRequestMockWithQueryString(
                 partialReponseConfig.FieldsQueryStringName, IdField, NameField);
 
             Assert.Equal(
@@ -66,7 +63,7 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         public void FieldsFromQueryString_EmptyFields_ReturnsEmptyString()
         {
             var partialReponseConfig = new DefaultPartialResponseConfig();
-            IRequestContext reqContextMock = GenerateRequestMockWithQueryString(
+            IRequest reqContextMock = GenerateRequestMockWithQueryString(
                 partialReponseConfig.FieldsQueryStringName, string.Empty);
 
             Assert.Equal(
@@ -78,7 +75,7 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         [Fact]
         public void FieldsFromHeader_NoFields_ReturnsEmptyString()
         {
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
             Assert.Equal(
                 string.Empty,
                 FieldsRetriever.FieldsFromHeader(
@@ -90,8 +87,9 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         {
             var partialReponseConfig = new DefaultPartialResponseConfig();
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(IdField);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, IdField } }));
 
             Assert.Equal(
                 IdField, FieldsRetriever.FieldsFromHeader(reqContextMock, partialReponseConfig.FieldsHeaderName));
@@ -104,8 +102,10 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             const string IdField = "id";
             const string NameField = "name";
             string joinedHeaderValues = string.Join(",", IdField, NameField);
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(joinedHeaderValues);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, joinedHeaderValues } }));
+            //reqContextMock.Expect(x => x.Headers[partialReponseConfig.FieldsHeaderName]).Return(joinedHeaderValues);
 
             Assert.Equal(
                 joinedHeaderValues,
@@ -116,8 +116,10 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         public void FieldsFromHeader_EmptyFields_ReturnsEmptyString()
         {
             var partialReponseConfig = new DefaultPartialResponseConfig();
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(string.Empty);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            //reqContextMock.Expect(x => x.Headers[partialReponseConfig.FieldsHeaderName]).Return(string.Empty);
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, string.Empty } }));
 
             Assert.Equal(
                 string.Empty, FieldsRetriever.FieldsFromHeader(reqContextMock, partialReponseConfig.FieldsHeaderName));
@@ -126,7 +128,7 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         [Fact]
         public void GetFields_NoFields_ReturnsEmptyString()
         {
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
             Assert.Equal(string.Empty, FieldsRetriever.GetFields(reqContextMock, new DefaultPartialResponseConfig()));
         }
 
@@ -137,11 +139,9 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
                 GetMockResponseConfig(FieldResolutionMethod.HeaderThenQueryString);
 
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            httpRequesttMock.Expect(x => x.QueryString)
-                            .Return(new NameValueCollection {{partialReponseConfig.FieldsQueryStringName, IdField}});
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.QueryString)
+                            .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsQueryStringName, IdField } }));
 
             Assert.Equal(
                 IdField,
@@ -156,12 +156,12 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
 
             const string IdField = "id";
             const string NameField = "name";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            httpRequesttMock.Expect(x => x.QueryString)
-                            .Return(new NameValueCollection {{partialReponseConfig.FieldsQueryStringName, IdField}});
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(NameField);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.QueryString)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsQueryStringName, IdField } }));
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, NameField } }));
+            //reqContextMock.Expect(x => x.Headers[partialReponseConfig.FieldsHeaderName]).Return(NameField);
 
             Assert.Equal(
                 NameField,
@@ -175,10 +175,9 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
                 GetMockResponseConfig(FieldResolutionMethod.QueryStringThenHeader);
 
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(IdField);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, IdField } }));
 
             Assert.Equal(
                 IdField,
@@ -194,12 +193,11 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             const string IdField = "id";
             const string NameField = "name";
 
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            httpRequesttMock.Expect(x => x.QueryString)
-                            .Return(new NameValueCollection {{partialReponseConfig.FieldsQueryStringName, IdField}});
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(NameField);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.QueryString)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsQueryStringName, IdField } }));
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, NameField } }));
 
             Assert.Equal(
                 IdField,
@@ -212,11 +210,9 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             IPartialResponseConfig partialReponseConfig = GetMockResponseConfig(FieldResolutionMethod.QueryStringOnly);
 
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            httpRequesttMock.Expect(x => x.QueryString)
-                            .Return(new NameValueCollection {{partialReponseConfig.FieldsQueryStringName, IdField}});
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.QueryString)
+                            .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsQueryStringName, IdField } }));
 
             Assert.Equal(
                 IdField,
@@ -229,8 +225,9 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             IPartialResponseConfig partialReponseConfig = GetMockResponseConfig(FieldResolutionMethod.HeaderOnly);
 
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(IdField);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, IdField } }));
 
             Assert.Equal(
                 IdField,
@@ -243,10 +240,8 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             IPartialResponseConfig partialReponseConfig = GetMockResponseConfig(FieldResolutionMethod.QueryStringOnly);
 
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(IdField);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.Headers[partialReponseConfig.FieldsHeaderName]).Return(IdField);
 
             Assert.Equal(string.Empty, FieldsRetriever.GetFields(reqContextMock, partialReponseConfig));
         }
@@ -257,11 +252,9 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             IPartialResponseConfig partialReponseConfig = GetMockResponseConfig(FieldResolutionMethod.HeaderOnly);
 
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            httpRequesttMock.Expect(x => x.QueryString)
-                            .Return(new NameValueCollection {{partialReponseConfig.FieldsQueryStringName, IdField}});
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.QueryString)
+                            .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsQueryStringName, IdField } }));
 
             Assert.Equal(string.Empty, FieldsRetriever.GetFields(reqContextMock, partialReponseConfig));
         }
@@ -269,10 +262,10 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
         [Fact]
         public void GetFields_UnknownEnum_ReturnsEmptyString()
         {
-            Assert.False(Enum.IsDefined(typeof (FieldResolutionMethod), Int32.MaxValue));
+            Assert.False(Enum.IsDefined(typeof(FieldResolutionMethod), Int32.MaxValue));
 
-            IPartialResponseConfig partialReponseConfig = GetMockResponseConfig((FieldResolutionMethod) Int32.MaxValue);
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
+            IPartialResponseConfig partialReponseConfig = GetMockResponseConfig((FieldResolutionMethod)Int32.MaxValue);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
 
             Assert.Equal(string.Empty, FieldsRetriever.GetFields(reqContextMock, partialReponseConfig));
         }
@@ -286,12 +279,11 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
             const string IdField = "id";
             const string NameField = "name";
 
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            httpRequesttMock.Expect(x => x.QueryString)
-                            .Return(new NameValueCollection {{partialReponseConfig.FieldsQueryStringName, IdField}});
-            reqContextMock.Expect(x => x.GetHeader(partialReponseConfig.FieldsHeaderName)).Return(NameField);
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.QueryString)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsQueryStringName, IdField } }));
+            reqContextMock.Expect(x => x.Headers)
+                .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsHeaderName, NameField } }));
 
             Assert.Equal(
                 string.Join(FieldSelectorConstants.MultipleFieldSeparator.ToString(), NameField, IdField),
@@ -305,11 +297,9 @@ namespace ServiceStack.PartialResponse.ServiceModel.UnitTests
                 GetMockResponseConfig(FieldResolutionMethod.QueryStringAndHeader);
 
             const string IdField = "id";
-            var reqContextMock = MockRepository.GenerateStub<IRequestContext>();
-            var httpRequesttMock = MockRepository.GenerateStub<IHttpRequest>();
-            reqContextMock.Expect(x => x.Get<IHttpRequest>()).Return(httpRequesttMock);
-            httpRequesttMock.Expect(x => x.QueryString)
-                            .Return(new NameValueCollection {{partialReponseConfig.FieldsQueryStringName, IdField}});
+            var reqContextMock = MockRepository.GenerateStub<IRequest>();
+            reqContextMock.Expect(x => x.QueryString)
+                            .Return(new NameValueCollectionWrapper(new NameValueCollection { { partialReponseConfig.FieldsQueryStringName, IdField } }));
 
             Assert.Equal(IdField, FieldsRetriever.GetFields(reqContextMock, partialReponseConfig));
         }
