@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceStack.PartialResponse.ServiceModel", "ServiceStack.PartialResponse.ServiceModel\ServiceStack.PartialResponse.ServiceModel.csproj", "{E04EF707-6334-4660-908E-E87FC5421670}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceStack.PartialResponse.ServiceModel.UnitTests", "ServiceStack.PartialResponse.ServiceModel.UnitTests\ServiceStack.PartialResponse.ServiceModel.UnitTests.csproj", "{91BB2518-4192-46B4-8DF1-AA6C2D441755}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{AD42DAF3-1A85-41CE-9AA8-8D4174923250}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

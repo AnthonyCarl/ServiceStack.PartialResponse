@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ServiceStack.ServiceHost;
+using ServiceStack.Web;
 
 namespace ServiceStack.PartialResponse.ServiceModel
 {
@@ -21,7 +21,7 @@ namespace ServiceStack.PartialResponse.ServiceModel
         /// <param name="requestContext">Servicestack Request Context</param>
         /// <param name="dto">Dto to process to partial response.</param>
         /// <returns></returns>
-        public static object ToPartialResponse<T>(this IRequestContext requestContext, T dto)
+        public static object ToPartialResponse<T>(this IRequest requestContext, T dto)
             where T : class
         {
             return requestContext.ToPartialResponse(dto, new DefaultPartialResponseConfig());
@@ -40,7 +40,7 @@ namespace ServiceStack.PartialResponse.ServiceModel
         /// <param name="partialResponseConfig"></param>
         /// <returns></returns>
         public static object ToPartialResponse<T>(
-            this IRequestContext requestContext, T dto, IPartialResponseConfig partialResponseConfig)
+            this IRequest requestContext, T dto, IPartialResponseConfig partialResponseConfig)
             where T : class
         {
             if (dto == null)

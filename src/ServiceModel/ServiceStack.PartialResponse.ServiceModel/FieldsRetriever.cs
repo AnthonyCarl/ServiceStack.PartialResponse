@@ -1,65 +1,64 @@
-﻿using ServiceStack.ServiceHost;
+﻿using ServiceStack;
+using ServiceStack.Web;
 
 namespace ServiceStack.PartialResponse.ServiceModel
 {
     internal static class FieldsRetriever
     {
-        public static string GetFields(IRequestContext requestContext, IPartialResponseConfig partialResponseConfig)
+        public static string GetFields(IRequest request, IPartialResponseConfig partialResponseConfig)
         {
             switch (partialResponseConfig.FieldResolutionMethod)
             {
                 case FieldResolutionMethod.HeaderOnly:
-                    return FieldsFromHeader(requestContext, partialResponseConfig.FieldsHeaderName);
+                    return FieldsFromHeader(request, partialResponseConfig.FieldsHeaderName);
                 case FieldResolutionMethod.QueryStringOnly:
-                    return FieldsFromQueryString(requestContext, partialResponseConfig.FieldsQueryStringName);
+                    return FieldsFromQueryString(request, partialResponseConfig.FieldsQueryStringName);
                 case FieldResolutionMethod.HeaderThenQueryString:
-                {
-                    string fields = FieldsFromHeader(requestContext, partialResponseConfig.FieldsHeaderName);
-                    return string.IsNullOrWhiteSpace(fields)
-                               ? FieldsFromQueryString(requestContext, partialResponseConfig.FieldsQueryStringName)
-                               : fields;
-                }
+                    {
+                        string fields = FieldsFromHeader(request, partialResponseConfig.FieldsHeaderName);
+                        return string.IsNullOrWhiteSpace(fields)
+                                   ? FieldsFromQueryString(request, partialResponseConfig.FieldsQueryStringName)
+                                   : fields;
+                    }
                 case FieldResolutionMethod.QueryStringThenHeader:
-                {
-                    string fields = FieldsFromQueryString(requestContext, partialResponseConfig.FieldsQueryStringName);
-                    return string.IsNullOrWhiteSpace(fields)
-                               ? FieldsFromHeader(requestContext, partialResponseConfig.FieldsHeaderName)
-                               : fields;
-                }
+                    {
+                        string fields = FieldsFromQueryString(request, partialResponseConfig.FieldsQueryStringName);
+                        return string.IsNullOrWhiteSpace(fields)
+                                   ? FieldsFromHeader(request, partialResponseConfig.FieldsHeaderName)
+                                   : fields;
+                    }
                 case FieldResolutionMethod.QueryStringAndHeader:
-                {
-                    string headerFields = FieldsFromHeader(requestContext, partialResponseConfig.FieldsHeaderName);
-                    string queryFields = FieldsFromQueryString(
-                        requestContext, partialResponseConfig.FieldsQueryStringName);
-                    return string.IsNullOrWhiteSpace(headerFields)
-                               ? queryFields
-                               : string.Join(
-                                   FieldSelectorConstants.MultipleFieldSeparator.ToString(), headerFields, queryFields);
-                }
+                    {
+                        string headerFields = FieldsFromHeader(request, partialResponseConfig.FieldsHeaderName);
+                        string queryFields = FieldsFromQueryString(
+                            request, partialResponseConfig.FieldsQueryStringName);
+                        return string.IsNullOrWhiteSpace(headerFields)
+                                   ? queryFields
+                                   : string.Join(
+                                       FieldSelectorConstants.MultipleFieldSeparator.ToString(), headerFields, queryFields);
+                    }
                 default:
                     return string.Empty;
             }
         }
 
-        public static string FieldsFromQueryString(IRequestContext requestContext, string fieldsQueryStringName)
+        public static string FieldsFromQueryString(IRequest request, string fieldsQueryStringName)
         {
-            var httpRequest = requestContext.Get<IHttpRequest>();
-
-            if (httpRequest == null)
+            if (request == null)
             {
                 return string.Empty;
             }
-            if (httpRequest.QueryString == null)
+            if (request.QueryString == null)
             {
                 return string.Empty;
             }
 
-            return httpRequest.QueryString.Get(fieldsQueryStringName);
+            return request.QueryString.Get(fieldsQueryStringName);
         }
 
-        public static string FieldsFromHeader(IRequestContext requestContext, string fieldsHeaderName)
+        public static string FieldsFromHeader(IRequest request, string fieldsHeaderName)
         {
-            return requestContext.GetHeader(fieldsHeaderName) ?? string.Empty;
+            return request.Headers != null ? request.Headers[fieldsHeaderName] ?? string.Empty : string.Empty;
         }
     }
 }

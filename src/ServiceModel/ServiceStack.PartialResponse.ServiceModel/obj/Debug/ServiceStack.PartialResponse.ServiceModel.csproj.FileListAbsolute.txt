@@ -1,0 +1,12 @@
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.PartialResponse.ServiceModel.XML
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.PartialResponse.ServiceModel.dll
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.PartialResponse.ServiceModel.pdb
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ImpromptuInterface.dll
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.Interfaces.dll
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ImpromptuInterface.xml
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\obj\Debug\ServiceStack.PartialResponse.ServiceModel.dll
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\obj\Debug\ServiceStack.PartialResponse.ServiceModel.pdb
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.Common.dll
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.Text.dll
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.Common.xml
+C:\Users\vantste\Desktop\GitHub\ServiceStack.PartialResponse\src\ServiceModel\ServiceStack.PartialResponse.ServiceModel\bin\Debug\ServiceStack.Text.xml
