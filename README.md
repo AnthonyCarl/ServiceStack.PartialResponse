@@ -1,3 +1,11 @@
+v2 Wish List
+============
+- Target PCL
+- Target .Net 4.0 unless 4.5 is absolutely needed
+- Split out parsing and other core logic into depedency free library
+- Support for turning lambda expressions into field selectors
+- Create adapter libraries for various web frameworks (i.e. ServiceStack)
+
 ServiceStack.PartialResponse.ServiceModel
 =========================================
 
