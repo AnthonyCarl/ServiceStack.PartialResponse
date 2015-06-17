@@ -6,6 +6,7 @@ namespace ServiceStack.PartialResponse.ServiceModel
     {
         public static bool IsEmpty<T>(this ICollection<T> collection)
         {
+            //Comment
             return collection == null || collection.Count == 0;
         }
     }
