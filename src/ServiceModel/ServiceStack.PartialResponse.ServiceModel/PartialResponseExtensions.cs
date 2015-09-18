@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ServiceStack;
 using ServiceStack.Web;
 
 namespace ServiceStack.PartialResponse.ServiceModel
@@ -11,7 +10,7 @@ namespace ServiceStack.PartialResponse.ServiceModel
     {
         /// <summary>
         ///     <para>
-        ///         Returns a partial response of the given Dto if fileds are specified in the request context and the content
+        ///         Returns a partial response of the given Dto if fields are specified in the request and the content
         ///         type is supported.
         ///     </para>
         ///     <para>
@@ -19,24 +18,24 @@ namespace ServiceStack.PartialResponse.ServiceModel
         ///     </para>
         /// </summary>
         /// <typeparam name="T">Dto Class</typeparam>
-        /// <param name="requestContext">Servicestack Request Context</param>
+        /// <param name="request">Servicestack Request</param>
         /// <param name="dto">Dto to process to partial response.</param>
         /// <returns></returns>
-        public static object ToPartialResponse<T>(this IRequest requestContext, T dto)
+        public static object ToPartialResponse<T>(this IRequest request, T dto)
             where T : class
         {
-            return requestContext.ToPartialResponse(dto, new DefaultPartialResponseConfig());
+            return request.ToPartialResponse(dto, new DefaultPartialResponseConfig());
         }
 
         /// <summary>
         ///     <para>
-        ///         Returns a partial response of the given Dto if fileds are specified in the request context and the content
+        ///         Returns a partial response of the given Dto if fields are specified in the request and the content
         ///         type is supported.
         ///     </para>
         ///     <para>Configuration is provided by the caller.</para>
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="requestContext"></param>
+        /// <param name="request"></param>
         /// <param name="dto"></param>
         /// <param name="partialResponseConfig"></param>
         /// <returns></returns>
